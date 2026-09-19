@@ -17,8 +17,8 @@
    for(const [d,rows] of Object.entries(raw.state.tasks))if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||!Array.isArray(rows))throw Error('工作日期或清單格式錯誤。');
    return raw;
  }
- function packageState(){return {format:'bite-magic40-preview-v1',version:1,studentId:magic40Student,createdAt:new Date().toISOString(),state:JSON.parse(JSON.stringify(state))};}
- function counts(s){return [['To Do',Object.values(s.tasks).reduce((n,x)=>n+x.length,0)],['行事曆',s.calendarEvents.length],['魔法記憶',s.magicMemory.length],['複習完成標記',Object.keys(s.reviewCompletions).length],['複習取消標記',Object.keys(s.cancelledReviews).length],['複習時間',Object.keys(s.reviewTimeRecords).length],['專注紀錄',s.sessions.length],['成績',s.exams.length]];}
+ function packageState(){return {format:'bite-magic40-preview-v1',version:1,studentId:magic40Student,createdAt:new Date().toISOString(),state:cleanBackupState40(state)};}
+ function counts(s){return [['To Do',Object.values(s.tasks||{}).reduce((n,x)=>n+(Array.isArray(x)?x.length:0),0)],['行事曆',s.calendarEvents.length],['魔法記憶',s.magicMemory.length],['複習完成標記',Object.keys(s.reviewCompletions).length],['複習取消標記',Object.keys(s.cancelledReviews).length],['複習時間',Object.keys(s.reviewTimeRecords).length],['專注紀錄',s.sessions.length],['成績',s.exams.length]];}
  function escape(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
  function normalizedState40(v){
    var x=typeof v==='string'?JSON.parse(v):JSON.parse(JSON.stringify(v));
@@ -34,6 +34,15 @@
  function sameState40(raw,current){
    try{return canonical40(normalizedState40(raw))===canonical40(normalizedState40(current));}
    catch(_){return false;}
+ }
+ function cleanBackupState40(source){
+   const s=JSON.parse(JSON.stringify(source));
+   const clean={};
+   for(const [d,rows] of Object.entries(s.tasks||{})){
+     if(/^\d{4}-\d{2}-\d{2}$/.test(d)&&Array.isArray(rows))clean[d]=rows;
+   }
+   s.tasks=clean;
+   return s;
  }
  function notice(msg){const x=document.getElementById('m40-message');if(x)x.textContent=msg;}
  function writeSafely(record){
@@ -64,7 +73,7 @@
    button.onclick=()=>{try{
      const storedExport=magic40NativeStorage.getItem(magic40PersonalKey);
      if(!sameState40(storedExport,state))throw Error('另一個分頁已修改本學生資料；請重新整理再下載備份，避免下載過期紀錄。');
-     const data=verify(packageState());const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='magic40-'+magic40Student+'-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notice('已產生 '+magic40Student+' 的備份下載。');
+     const dirtyTaskKeys=Object.entries(state.tasks||{}).filter(([d,rows])=>!/^\\d{4}-\\d{2}-\\d{2}$/.test(d)||!Array.isArray(rows)).map(([d])=>d); const data=verify(packageState());const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='magic40-'+magic40Student+'-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notice('已產生 '+magic40Student+' 的備份下載。'+(dirtyTaskKeys.length?' 已忽略 '+dirtyTaskKeys.length+' 個非日期舊測試鍵。':''));
    }catch(e){notice('備份失敗：'+e.message);}};
    file.onchange=async()=>{plan=null;preview.textContent='';try{
      const f=file.files&&file.files[0];if(!f)return;if(f.size>maxBytes)throw Error('檔案超過 4 MB。');
@@ -75,7 +84,7 @@
      preview.innerHTML='<p><b>預覽：'+escape(raw.studentId)+'</b>｜備份時間 '+escape(raw.createdAt||'未提供')+'</p><ul>'+details+'</ul><p>匯入將以此備份取代本學生目前資料；其他學生不變。</p><label><input id="m40-check" type="checkbox"> 我確認備份所屬學生與筆數，並同意取代本學生目前資料。</label> <button class="btn" id="m40-apply" type="button">確認匯入</button>';
      document.getElementById('m40-apply').onclick=()=>{try{
        if(!document.getElementById('m40-check').checked)throw Error('請先勾選確認。');
-       if(!plan||plan.studentId!==magic40Student||plan.before!==JSON.stringify(state)||plan.storedBefore!==magic40NativeStorage.getItem(magic40PersonalKey))throw Error('目前資料已變更，請重新選取備份檔。');
+       if(!plan||plan.studentId!==magic40Student||!sameState40(plan.before,state)||!sameState40(plan.storedBefore,magic40NativeStorage.getItem(magic40PersonalKey)))throw Error('目前資料已變更，請重新選取備份檔。');
        writeSafely(plan.record);plan=null;notice('匯入成功。');
      }catch(e){notice('匯入未執行：'+e.message);}};
      notice('預覽完成，尚未修改任何學習資料。');
@@ -83,7 +92,7 @@
    undo.onclick=()=>{try{
      const key=prefix+magic40Student,baselineKey=undoBaselinePrefix+magic40Student,raw=magic40NativeStorage.getItem(key);
      const importedBaseline=magic40NativeStorage.getItem(baselineKey);
-     if(importedBaseline===null||importedBaseline!==magic40NativeStorage.getItem(magic40PersonalKey)||importedBaseline!==JSON.stringify(state))throw Error('匯入後資料已有新變更，不能直接復原；請先下載目前資料備份。');
+     if(importedBaseline===null||!sameState40(importedBaseline,magic40NativeStorage.getItem(magic40PersonalKey))||!sameState40(importedBaseline,state))throw Error('匯入後資料已有新變更，不能直接復原；請先下載目前資料備份。');
      if(raw===null)throw Error('目前沒有可復原的匯入紀錄。');
      if(!confirm('確定復原 '+magic40Student+' 最近一次匯入前的資料？'))return;
      const prev=magic40NativeStorage.getItem(magic40PersonalKey);
