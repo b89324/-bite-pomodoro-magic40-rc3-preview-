@@ -46,7 +46,7 @@
  }
  function notice(msg){const x=document.getElementById('m40-message');if(x)x.textContent=msg;}
  function writeSafely(record){
-   const prev=JSON.stringify(state),undoKey=prefix+magic40Student,baselineKey=undoBaselinePrefix+magic40Student;
+   const prev=JSON.stringify(cleanBackupState40(state)),undoKey=prefix+magic40Student,baselineKey=undoBaselinePrefix+magic40Student;
    const oldUndo=magic40NativeStorage.getItem(undoKey);
    const oldBaseline=magic40NativeStorage.getItem(baselineKey);
    const oldPersonal=magic40NativeStorage.getItem(magic40PersonalKey);
@@ -98,7 +98,7 @@
      const prev=magic40NativeStorage.getItem(magic40PersonalKey);
      const oldUndo=magic40NativeStorage.getItem(key),oldBaseline=magic40NativeStorage.getItem(baselineKey);
      try {
-       const restored=verify({format:'bite-magic40-preview-v1',version:1,studentId:magic40Student,state:JSON.parse(raw)});
+       const restored=verify({format:'bite-magic40-preview-v1',version:1,studentId:magic40Student,state:cleanBackupState40(JSON.parse(raw))});
        magic40NativeStorage.setItem(magic40PersonalKey,JSON.stringify(restored.state));
        magic40NativeStorage.removeItem(key);
        magic40NativeStorage.removeItem(baselineKey);
