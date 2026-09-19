@@ -91,9 +91,12 @@
    }catch(e){notice('無法預覽：'+e.message);}finally{file.value='';}};
    undo.onclick=()=>{try{
      const key=prefix+magic40Student,baselineKey=undoBaselinePrefix+magic40Student,raw=magic40NativeStorage.getItem(key);
+     if(raw===null){
+       notice('目前沒有可再次復原的匯入紀錄。若剛才已復原成功，這是正常狀態。');
+       return;
+     }
      const importedBaseline=magic40NativeStorage.getItem(baselineKey);
      if(importedBaseline===null||!sameState40(importedBaseline,magic40NativeStorage.getItem(magic40PersonalKey))||!sameState40(importedBaseline,state))throw Error('匯入後資料已有新變更，不能直接復原；請先下載目前資料備份。');
-     if(raw===null)throw Error('目前沒有可復原的匯入紀錄。');
      if(!confirm('確定復原 '+magic40Student+' 最近一次匯入前的資料？'))return;
      const prev=magic40NativeStorage.getItem(magic40PersonalKey);
      const oldUndo=magic40NativeStorage.getItem(key),oldBaseline=magic40NativeStorage.getItem(baselineKey);
@@ -102,7 +105,10 @@
        magic40NativeStorage.setItem(magic40PersonalKey,JSON.stringify(restored.state));
        magic40NativeStorage.removeItem(key);
        magic40NativeStorage.removeItem(baselineKey);
-       state=JSON.parse(JSON.stringify(restored.state));magic40RefreshStorageBaseline();render();
+       state=JSON.parse(JSON.stringify(restored.state));
+       magic40RefreshStorageBaseline();
+       render();
+       notice('復原成功：已回到最近一次匯入前的資料。此復原紀錄已使用，不能再重複復原。');
      }catch(e){
        try{if(prev===null)magic40NativeStorage.removeItem(magic40PersonalKey);else magic40NativeStorage.setItem(magic40PersonalKey,prev);}catch(_e){}
        try{if(oldUndo===null)magic40NativeStorage.removeItem(key);else magic40NativeStorage.setItem(key,oldUndo);}catch(_e){}
