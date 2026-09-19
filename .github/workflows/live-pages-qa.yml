@@ -1,0 +1,20 @@
+name: Verify live GitHub Pages
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  live-pages-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - name: Wait for Pages deployment
+        run: sleep 20
+      - run: node live-pages-qa.mjs
