@@ -1,12 +1,9 @@
 import { webkit, devices } from 'playwright';
 import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 
-const server=spawn('python3',['-m','http.server','4174','--bind','127.0.0.1'],{stdio:'inherit'});
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const check=(cond,msg)=>{if(!cond)throw new Error(msg)};
 
-try{
-  mkdirSync('qa-mobile-artifacts',{recursive:true});
+mkdirSync('qa-mobile-artifacts',{recursive:true});
 
   const browser=await webkit.launch({headless:true});
   const iphone=devices['iPhone 13'];
@@ -156,5 +153,4 @@ try{
   },null,2));
 
   console.log('MAGIC40_LIVE_IPHONE13_WEBKIT_QA PASS 16/16');
-  await browser.close();
-}
+await browser.close();
