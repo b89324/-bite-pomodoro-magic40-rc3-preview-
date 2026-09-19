@@ -1,0 +1,27 @@
+name: Verify live iPhone 13 WebKit
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  live-iphone13-webkit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save playwright@1.55.0
+      - run: npx playwright install --with-deps webkit
+      - name: Wait for Pages deployment
+        run: sleep 20
+      - run: node live-iphone13-qa.mjs
+      - name: Upload live iPhone QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: magic40-live-iphone13-webkit-qa
+          path: qa-mobile-artifacts
+          if-no-files-found: warn
