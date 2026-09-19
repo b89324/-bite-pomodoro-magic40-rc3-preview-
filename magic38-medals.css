@@ -1,0 +1,18 @@
+/* magic38 responsive achievement gallery */
+.magic38-gallery{margin:18px 0;padding:20px;min-width:0}
+.magic38-gallery header h2{margin:0 0 7px;font-size:clamp(21px,3vw,29px)}
+.magic38-gallery header p,.magic38-help{margin:0 0 15px;color:#647568;line-height:1.6}
+.magic38-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.magic38-medal{--light:#fff5c5;--gold:#edc14c;--edge:#a77323;--ribbon:#e85b70;border:2px solid #e8d393;border-radius:24px;min-width:0;background:linear-gradient(145deg,#fffdf3,#fff0c6);overflow:hidden;box-shadow:0 5px 15px rgba(98,62,25,.1)}
+.magic38-blue{--light:#ecfaff;--gold:#9bd6f7;--edge:#4e82bc;--ribbon:#7989e1;background:linear-gradient(145deg,#fafdff,#e0effe);border-color:#c4dff2}
+.magic38-medal summary{display:flex;align-items:center;gap:12px;cursor:pointer;padding:16px;list-style:none;min-height:94px}
+.magic38-medal summary::-webkit-details-marker{display:none}
+.magic38-medal summary:focus-visible{outline:3px solid #255a3d;outline-offset:-4px}
+.magic38-seal{position:relative;flex:none;display:grid;place-items:center;width:62px;height:62px;border-radius:50%;border:3px solid var(--edge);background:repeating-conic-gradient(var(--light) 0 16deg,var(--gold) 16deg 32deg);color:var(--edge);font-size:34px;text-shadow:0 1px #fff;box-shadow:0 3px 9px #6b4b2228}
+.magic38-seal:before,.magic38-seal:after{content:'';position:absolute;bottom:-19px;width:18px;height:26px;background:var(--ribbon);z-index:-1;clip-path:polygon(0 0,100% 0,100% 100%,50% 73%,0 100%)}
+.magic38-seal:before{left:8px;transform:rotate(15deg)}.magic38-seal:after{right:8px;transform:rotate(-15deg)}
+.magic38-medal-title{display:flex;flex-direction:column;gap:5px;min-width:0}.magic38-medal-title b{font-size:clamp(17px,2.3vw,23px);color:#42584a}.magic38-medal-title small{font-size:13px;color:#6c736a}
+.magic38-count{margin-left:auto;white-space:nowrap;border-radius:30px;padding:6px 9px;background:#fff;color:#795120;font-weight:900}
+.magic38-details{padding:5px 15px 15px;border-top:1px dashed #dacd9e;max-height:350px;overflow:auto;background:#fffefb}
+.magic38-details ol{margin:0;padding:0;list-style:none}.magic38-details li{display:flex;flex-direction:column;gap:6px;padding:12px 0;border-bottom:1px dashed #ddd;overflow-wrap:anywhere}.magic38-details li:last-child{border-bottom:none}.magic38-details li small{color:#617064;font-size:14px}.magic38-help{font-size:13px;margin:14px 0 0}
+@media(max-width:660px){.magic38-grid{grid-template-columns:minmax(0,1fr)}.magic38-gallery{padding:13px}.magic38-medal summary{padding:13px 10px;gap:9px}.magic38-seal{width:55px;height:55px;font-size:29px}.magic38-count{font-size:13px}}
