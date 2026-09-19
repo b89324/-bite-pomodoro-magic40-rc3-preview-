@@ -1,0 +1,79 @@
+/* magic37: playful rosette award; visual-only enhancement */
+.completion-medal37{--medal-light:#fff5bd;--medal-main:#f7c449;--medal-edge:#bc7317;--medal-ribbon:#e75a69;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;isolation:isolate;width:112px;max-width:100%;min-width:0;min-height:104px;padding:9px 6px 7px;margin:2px auto;border:0;border-radius:19px;background:radial-gradient(circle at 30% 17%,#fffef7 0%,#fff2d2 58%,#fce4b1 100%);box-shadow:0 5px 14px rgba(105,68,23,.14),inset 0 1px 0 #fff;color:#74420f;text-align:center;white-space:nowrap;box-sizing:border-box;overflow:visible;animation:medal-arrive37 .65s cubic-bezier(.2,1.65,.4,1) both}
+.completion-medal37::before,.completion-medal37::after{content:'✦';position:absolute;z-index:3;color:#edaa34;font-size:14px;text-shadow:0 0 7px #fff;pointer-events:none;animation:medal-sparkle37 2.6s ease-in-out infinite}
+.completion-medal37::before{top:5px;left:8px}.completion-medal37::after{right:6px;top:32px;font-size:11px;animation-delay:1.15s}
+.completion-medal-rosette37{position:relative;z-index:1;display:grid;place-items:center;width:57px;height:57px;flex:none;margin:0 0 8px;border:3px solid var(--medal-edge);border-radius:50%;background:repeating-conic-gradient(from 4deg,var(--medal-light) 0deg 16deg,var(--medal-main) 16deg 32deg);box-shadow:0 3px 0 #fff6cf inset,0 4px 8px rgba(98,53,21,.22),0 0 0 3px #fff4cb}
+.completion-medal-rosette37::before,.completion-medal-rosette37::after{content:'';position:absolute;z-index:-1;bottom:-19px;width:19px;height:26px;background:var(--medal-ribbon);clip-path:polygon(0 0,100% 0,100% 100%,50% 73%,0 100%);box-shadow:inset 3px 0 rgba(255,255,255,.25)}
+.completion-medal-rosette37::before{left:6px;transform:rotate(18deg)}.completion-medal-rosette37::after{right:6px;transform:rotate(-18deg);filter:brightness(.87)}
+.completion-medal-icon37{position:relative;display:grid;place-items:center;width:42px;height:42px;border:2px solid rgba(255,255,255,.85);border-radius:50%;background:radial-gradient(circle at 28% 24%,#fffbe1,var(--medal-main) 75%);color:#a7620b;font-size:29px;line-height:1;text-shadow:0 1px #fff2b0;box-shadow:0 2px 4px rgba(108,73,20,.22) inset;transform:rotate(-8deg)}
+.completion-medal-caption37{position:relative;z-index:2;padding:3px 7px;border-radius:99px;background:#fffdfa;color:#9d4b17;font-size:14px;font-weight:1000;line-height:1.25;letter-spacing:.01em;box-shadow:0 2px 5px rgba(105,65,36,.1)}
+.completion-medal-ontime37{--medal-light:#eff9ff;--medal-main:#9ad7f7;--medal-edge:#4689c5;--medal-ribbon:#6e82df;background:radial-gradient(circle at 27% 17%,#fff 0%,#e9f5ff 58%,#cfe6ff 100%);color:#265786}
+.completion-medal-ontime37 .completion-medal-icon37{color:#3267a5;background:radial-gradient(circle at 28% 24%,#fff,var(--medal-main) 75%);text-shadow:0 1px #fff}.completion-medal-ontime37 .completion-medal-caption37{color:#3265a0}.completion-medal-ontime37::before,.completion-medal-ontime37::after{color:#6baddb}
+@keyframes medal-arrive37{from{opacity:0;transform:translateY(9px) rotate(-6deg) scale(.84)}75%{opacity:1;transform:translateY(-2px) rotate(3deg) scale(1.04)}to{opacity:1;transform:none}}
+@keyframes medal-sparkle37{0%,100%{opacity:.45;transform:scale(.75)}50%{opacity:1;transform:scale(1.2)}}
+@media(max-width:600px){.completion-medal37{width:100%;max-width:120px;min-height:105px;margin:5px auto}.completion-medal-caption37{font-size:14px}}
+@media(prefers-reduced-motion:reduce){.completion-medal37,.completion-medal37::before,.completion-medal37::after{animation:none!important}}
+.magic36-import {
+  margin: 14px 0;
+  padding: 18px;
+  min-width: 0;
+}
+.magic36-import input[type='file'] {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-top: 8px;
+}
+.magic36-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+}
+.magic36-buttons button {
+  min-height: 44px;
+  padding: 9px 15px;
+}
+.magic36-scroll {
+  overflow: auto;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
+.magic36-scroll table {
+  border-collapse: collapse;
+  min-width: 540px;
+  width: 100%;
+}
+.magic36-scroll td,
+.magic36-scroll th {
+  border: 1px solid #d7e3d9;
+  padding: 8px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.calendar-entry-grid .calendar-date-field,
+.calendar-entry-grid #calDate {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+.calendar-entry-grid #calDate {
+  height: 46px !important;
+  min-height: 46px !important;
+  max-height: 46px !important;
+  font-size: 16px !important;
+}
+@media (max-width: 600px) {
+  .magic36-buttons {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .magic36-import {
+    padding: 12px;
+  }
+  .magic36-buttons button {
+    width: 100%;
+  }
+}
